@@ -2,17 +2,16 @@ package com.example.ecommerce.Model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "scrapitem")
 public class ScrapItem{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "scraptype_id", referencedColumnName = "id")
@@ -23,7 +22,7 @@ public class ScrapItem{
 
     public ScrapItem(){}
 
-     public ScrapItem(Long id,Date date, ScrapType scrapType, float quantity, String exporterCompanyName){
+     public ScrapItem(Long id, LocalDate date, ScrapType scrapType, float quantity, String exporterCompanyName){
         this.id = id;
         this.date = date;
         this.scrapType = scrapType;
@@ -31,19 +30,19 @@ public class ScrapItem{
         this.exporterCompanyName = exporterCompanyName;
      }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
          return date;
      }
 
-     public void setDate(Date date) {
+     public void setDate(LocalDate date) {
          this.date = date;
      }
 
