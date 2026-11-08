@@ -18,16 +18,19 @@ public class ScrapItem{
     private ScrapType scrapType;
 
     private float quantity;
-    private String exporterCompanyName;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customers_id", referencedColumnName = "customer_id")
+    private Customer customer;
 
     public ScrapItem(){}
 
-     public ScrapItem(Long id, LocalDate date, ScrapType scrapType, float quantity, String exporterCompanyName){
+     public ScrapItem(Long id, LocalDate date, ScrapType scrapType, float quantity, Customer customer){
         this.id = id;
         this.date = date;
         this.scrapType = scrapType;
         this.quantity = quantity;
-        this.exporterCompanyName = exporterCompanyName;
+        this.customer = customer;
      }
 
     public Long getId() {
@@ -62,11 +65,11 @@ public class ScrapItem{
          this.quantity = quantity;
      }
 
-     public String getExporterCompanyName() {
-         return exporterCompanyName;
+     public Customer getCustomer() {
+         return customer;
      }
 
-     public void setExporterCompanyName(String exporterCompanyName) {
-         this.exporterCompanyName = exporterCompanyName;
+     public void setCustomer(Customer customer) {
+         this.customer = customer;
      }
  }

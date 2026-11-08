@@ -1,7 +1,9 @@
 package com.example.ecommerce.Service.ScrapItem;
 
+import com.example.ecommerce.Model.Customer;
 import com.example.ecommerce.Model.ScrapItem;
 import com.example.ecommerce.Model.ScrapType;
+import com.example.ecommerce.Repository.CustomerRepository;
 import com.example.ecommerce.Repository.ScrapItemRepository;
 import com.example.ecommerce.Repository.ScrapTypeRepository;
 import com.example.ecommerce.Service.ScrapItem.ScrapItemService;
@@ -14,8 +16,10 @@ public class ScrapItemServiceImp implements ScrapItemService {
 
     private final ScrapItemRepository scrapitemrepository;
     private final ScrapTypeRepository scraptyperepository;
+    private final CustomerRepository customerRepository;
 
-    public ScrapItemServiceImp(ScrapItemRepository scrapitemrepository, ScrapTypeRepository scraptyperepository){
+    public ScrapItemServiceImp(ScrapItemRepository scrapitemrepository, ScrapTypeRepository scraptyperepository, CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
         this.scrapitemrepository = scrapitemrepository;
         this.scraptyperepository = scraptyperepository;
     }
@@ -69,9 +73,18 @@ public class ScrapItemServiceImp implements ScrapItemService {
         existingScrapItem.setScrapType(existingScrapType);
 
         existingScrapItem.setQuantity(scrapitem.getQuantity());
-        existingScrapItem.setExporterCompanyName(
-                scrapitem.getExporterCompanyName()
-        );
+
+        // Step 2: Get the Customer ID from the request payload
+        Long CustomerId = scrapitem.getCustomer().getCustomer_ID();
+
+        // Step 3: Find the Customer from its own table
+        Customer existingCustomer = customerRepository
+                .findById(CustomerId)
+                .orElseThrow(() ->
+                        new RuntimeException("ScrapType not found with id: " + CustomerId));
+
+        // Assign the actual Customer entity
+        existingScrapItem.setCustomer(existingCustomer);
 
         // Step 5: Save the updated ScrapItem
         return scrapitemrepository.save(existingScrapItem);
