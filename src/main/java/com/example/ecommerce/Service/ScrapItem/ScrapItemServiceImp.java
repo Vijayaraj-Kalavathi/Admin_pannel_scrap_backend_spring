@@ -1,7 +1,9 @@
 package com.example.ecommerce.Service.ScrapItem;
 
 import com.example.ecommerce.Model.ScrapItem;
+import com.example.ecommerce.Model.ScrapType;
 import com.example.ecommerce.Repository.ScrapItemRepository;
+import com.example.ecommerce.Repository.ScrapTypeRepository;
 import com.example.ecommerce.Service.ScrapItem.ScrapItemService;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +13,11 @@ import java.util.List;
 public class ScrapItemServiceImp implements ScrapItemService {
 
     private final ScrapItemRepository scrapitemrepository;
+    private final ScrapTypeRepository scraptyperepository;
 
-    public ScrapItemServiceImp(ScrapItemRepository scrapitemrepository){
+    public ScrapItemServiceImp(ScrapItemRepository scrapitemrepository, ScrapTypeRepository scraptyperepository){
         this.scrapitemrepository = scrapitemrepository;
+        this.scraptyperepository = scraptyperepository;
     }
 
     public ScrapItem createScrapItem(ScrapItem scrapitem){
@@ -30,14 +34,47 @@ public class ScrapItemServiceImp implements ScrapItemService {
         return scrapitemrepository.findById(id).orElseThrow(()-> new RuntimeException("ScrapItem not found"));
     }
 
+//    @Override
+//    public ScrapItem updateScrapItemById(Long id, ScrapItem scrapitem){
+//        ScrapItem existscrapItem = scrapitemrepository.findById(id).orElseThrow(()-> new RuntimeException("ScrapItem not found"));
+//        existscrapItem.setDate(scrapitem.getDate());
+//        existscrapItem.setScrapType(scrapitem.getScrapType());
+//        existscrapItem.setQuantity(scrapitem.getQuantity());
+//        existscrapItem.setExporterCompanyName(scrapitem.getExporterCompanyName());
+//        return  scrapitemrepository.save(existscrapItem);
+//    }
+
     @Override
-    public ScrapItem updateScrapItemById(Long id, ScrapItem scrapitem){
-        ScrapItem existscrapItem = scrapitemrepository.findById(id).orElseThrow(()-> new RuntimeException("ScrapItem not found"));
-        existscrapItem.setDate(scrapitem.getDate());
-        existscrapItem.setScrapType(scrapitem.getScrapType());
-        existscrapItem.setQuantity(scrapitem.getQuantity());
-        existscrapItem.setExporterCompanyName(scrapitem.getExporterCompanyName());
-        return  scrapitemrepository.save(existscrapItem);
+    public ScrapItem updateScrapItemById(Long id, ScrapItem scrapitem) {
+
+        // Step 1: Find the existing ScrapItem
+        ScrapItem existingScrapItem = scrapitemrepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("ScrapItem not found with id: " + id));
+
+        // Step 2: Get the ScrapType ID from the request payload
+        Long scrapTypeId = scrapitem.getScrapType().getId();
+
+        // Step 3: Find the ScrapType from its own table
+        ScrapType existingScrapType = scraptyperepository
+                .findById(scrapTypeId)
+                .orElseThrow(() ->
+                        new RuntimeException("ScrapType not found with id: " + scrapTypeId));
+
+        // Step 4: Update ScrapItem fields
+        existingScrapItem.setDate(scrapitem.getDate());
+
+        // Assign the actual ScrapType entity
+        existingScrapItem.setScrapType(existingScrapType);
+
+        existingScrapItem.setQuantity(scrapitem.getQuantity());
+        existingScrapItem.setExporterCompanyName(
+                scrapitem.getExporterCompanyName()
+        );
+
+        // Step 5: Save the updated ScrapItem
+        return scrapitemrepository.save(existingScrapItem);
     }
 
     @Override

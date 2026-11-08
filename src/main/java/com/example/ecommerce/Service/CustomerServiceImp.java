@@ -33,15 +33,11 @@ public class CustomerServiceImp implements CustomerService {
 
   @Override
   public Customer updateCustomerById(Long id, Customer customer){
-      Customer existCustomer = customerrepository.findById(id).orElseThrow(()-> new RuntimeException("Customet not found"));
-      existCustomer.setFirst_Name(customer.getFirst_Name());
-      existCustomer.setFirst_Name(customer.getLast_Name());
-      existCustomer.setAge(customer.getAge());
-      existCustomer.setCountry(customer.getCountry());
+      Customer existCustomer = customerrepository.findById(id).orElseThrow(()-> new RuntimeException("Customer not found"));
+      existCustomer.setCustomer_Name(customer.getCustomer_Name());
+      existCustomer.setAddress(customer.getAddress());
+      existCustomer.setGst_No(customer.getGst_No());
       return  customerrepository.save(existCustomer);
   }
-
-
-
 
 }

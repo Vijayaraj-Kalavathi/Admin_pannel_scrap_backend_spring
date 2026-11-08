@@ -48,7 +48,7 @@ public class SecurityConfig {
                         // adjust to your rules
                         .requestMatchers(HttpMethod.GET, "/scrapitem/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/scrapitem/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/scrapitem/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/scrapitem/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/scrapitem/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()

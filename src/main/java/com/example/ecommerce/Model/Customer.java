@@ -8,60 +8,49 @@ import jakarta.persistence.*;
 public class Customer{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Customer_ID;
-    private String First_Name;
-    private String Last_Name;
-    private int Age;
-    private String Country;
+    private Long customer_id;
+    private String customer_name;
+    private String address;
+    private String gst_no;
 
     public Customer(){}
 
-    public Customer(Long Customer_ID, String First_Name, String Last_Name, int Age, String Country){
-        this.Customer_ID = Customer_ID;
-        this.First_Name = First_Name;
-        this.Last_Name = Last_Name;
-        this.Age = Age;
-        this.Country = Country;
-
+    public Customer(Long customer_id, String customer_name, String address, String gst_no){
+        this.customer_id = customer_id;
+        this.customer_name = customer_name;
+        this.address = address;
+        this.gst_no = gst_no;
     }
 
     public Long getCustomer_ID() {
-        return Customer_ID;
+        return customer_id;
     }
 
     public void setCustomer_ID(Long customer_ID) {
-        Customer_ID = customer_ID;
+        customer_id = customer_ID;
     }
 
-    public String getFirst_Name() {
-        return First_Name;
+    public String getCustomer_Name() {
+        return customer_name;
     }
 
-    public void setFirst_Name(String first_Name) {
-        First_Name = first_Name;
+    public void setCustomer_Name(String customer_name) {
+        this.customer_name = customer_name;
     }
 
-    public String getLast_Name() {
-        return Last_Name;
+    public String getAddress() {
+        return address;
     }
 
-    public void setLast_Name(String last_Name) {
-        Last_Name = last_Name;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public int getAge() {
-        return Age;
+    public String getGst_No() {
+        return gst_no;
     }
 
-    public void setAge(int age) {
-        Age = age;
-    }
-
-    public void setCountry(String country) {
-        Country = country;
-    }
-
-    public String getCountry() {
-        return Country;
+    public void setGst_No(String gst_no) {
+        this.gst_no = gst_no;
     }
 }
