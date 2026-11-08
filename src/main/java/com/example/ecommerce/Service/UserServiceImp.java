@@ -42,6 +42,15 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+
+        return userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found")
+                );
+    }
+
+    @Override
     public User registerAdmin(User user) {
 
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {

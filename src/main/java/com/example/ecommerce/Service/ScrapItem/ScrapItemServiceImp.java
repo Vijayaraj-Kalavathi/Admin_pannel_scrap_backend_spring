@@ -38,6 +38,13 @@ public class ScrapItemServiceImp implements ScrapItemService {
     }
 
     @Override
+    public List<ScrapItem> getScrapItemsByUserId(Long userId) {
+
+        return scrapitemrepository.findByUser_Id(userId);
+
+    }
+
+    @Override
     public ScrapItem getScrapItemById(Long id){
         return scrapitemrepository.findById(id).orElseThrow(()-> new RuntimeException("ScrapItem not found"));
     }

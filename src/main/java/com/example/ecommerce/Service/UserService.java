@@ -7,4 +7,5 @@ public interface UserService {
     User register(User user);
     User registerAdmin(User user);
     String login(String username, String password);
+    User getUserByUsername(String username);
 }

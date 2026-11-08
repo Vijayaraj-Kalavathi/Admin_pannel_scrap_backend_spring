@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ScrapItemService{
     ScrapItem createScrapItem(ScrapItem scrapitem);
+    List<ScrapItem> getScrapItemsByUserId(Long userId);
     List<ScrapItem> getAllScrapItem();
     ScrapItem getScrapItemById(Long id);
     ScrapItem updateScrapItemById(Long id, ScrapItem scrapitem);

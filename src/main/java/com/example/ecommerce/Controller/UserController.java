@@ -59,11 +59,18 @@ public class UserController {
                 user.getPassword()
         );
 
+        // Fetch actual user details from database
+        User existingUser = userService.getUserByUsername(
+                user.getUsername()
+        );
+
         Map<String, Object> response = new HashMap<>();
 
         response.put("message", "Login successful");
         response.put("token", token);
-
+        response.put("username", existingUser.getUsername());
+        response.put("user_id", existingUser.getId());
+        response.put("storeName", existingUser.getStoreName());
         return ResponseEntity.ok(response);
     }
 

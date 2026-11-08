@@ -33,9 +33,16 @@ public class ScrapItemController{
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public List<ScrapItem> getAllScrapItem() {
-        return scrapitemservice.getAllScrapItem();
+//    @GetMapping
+//    public List<ScrapItem> getAllScrapItem() {
+//        return scrapitemservice.getAllScrapItem();
+//    }
+
+    @GetMapping("/user/{userId}")
+    public List<ScrapItem> getScrapItemsByUserId(
+            @PathVariable Long userId) {
+
+        return scrapitemservice.getScrapItemsByUserId(userId);
     }
 
     @GetMapping("/{id}")
