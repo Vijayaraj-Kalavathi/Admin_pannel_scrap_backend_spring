@@ -11,6 +11,10 @@ public class ScrapItem{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "users_id", referencedColumnName = "id")
+    private User user;
+
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -25,8 +29,9 @@ public class ScrapItem{
 
     public ScrapItem(){}
 
-     public ScrapItem(Long id, LocalDate date, ScrapType scrapType, float quantity, Customer customer){
+     public ScrapItem(Long id, User user ,LocalDate date, ScrapType scrapType, float quantity, Customer customer){
         this.id = id;
+        this.user = user;
         this.date = date;
         this.scrapType = scrapType;
         this.quantity = quantity;
@@ -39,6 +44,14 @@ public class ScrapItem{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDate getDate() {

@@ -3,9 +3,11 @@ package com.example.ecommerce.Service.ScrapItem;
 import com.example.ecommerce.Model.Customer;
 import com.example.ecommerce.Model.ScrapItem;
 import com.example.ecommerce.Model.ScrapType;
+import com.example.ecommerce.Model.User;
 import com.example.ecommerce.Repository.CustomerRepository;
 import com.example.ecommerce.Repository.ScrapItemRepository;
 import com.example.ecommerce.Repository.ScrapTypeRepository;
+import com.example.ecommerce.Repository.UserRepository;
 import com.example.ecommerce.Service.ScrapItem.ScrapItemService;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,13 @@ public class ScrapItemServiceImp implements ScrapItemService {
     private final ScrapItemRepository scrapitemrepository;
     private final ScrapTypeRepository scraptyperepository;
     private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
 
-    public ScrapItemServiceImp(ScrapItemRepository scrapitemrepository, ScrapTypeRepository scraptyperepository, CustomerRepository customerRepository) {
+    public ScrapItemServiceImp(ScrapItemRepository scrapitemrepository, ScrapTypeRepository scraptyperepository, CustomerRepository customerRepository, UserRepository userRepository) {
         this.customerRepository = customerRepository;
         this.scrapitemrepository = scrapitemrepository;
         this.scraptyperepository = scraptyperepository;
+        this.userRepository = userRepository;
     }
 
     public ScrapItem createScrapItem(ScrapItem scrapitem){
@@ -81,10 +85,22 @@ public class ScrapItemServiceImp implements ScrapItemService {
         Customer existingCustomer = customerRepository
                 .findById(CustomerId)
                 .orElseThrow(() ->
-                        new RuntimeException("ScrapType not found with id: " + CustomerId));
+                        new RuntimeException("Customer not found with id: " + CustomerId));
 
         // Assign the actual Customer entity
         existingScrapItem.setCustomer(existingCustomer);
+
+        // Step 2: Get the User ID from the request payload
+        Long UserId = scrapitem.getUser().getId();
+
+        // Step 3: Find the User from its own table
+        User existingUser = userRepository
+                .findById(UserId)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found with id: " + UserId));
+
+        // Assign the actual User entity
+        existingScrapItem.setUser(existingUser);
 
         // Step 5: Save the updated ScrapItem
         return scrapitemrepository.save(existingScrapItem);
