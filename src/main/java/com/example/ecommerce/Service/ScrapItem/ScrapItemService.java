@@ -1,6 +1,7 @@
 package com.example.ecommerce.Service.ScrapItem;
 
 import com.example.ecommerce.Model.ScrapItem;
+import com.example.ecommerce.Model.ScrapItemFilter;
 
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface ScrapItemService{
     ScrapItem getScrapItemById(Long id);
     ScrapItem updateScrapItemById(Long id, ScrapItem scrapitem);
     ScrapItem deleteScrapItemById(Long id);
+    List<ScrapItem> getScrapTypeFilter(ScrapItemFilter request);
 }
