@@ -18,18 +18,44 @@ public interface ScrapItemRepository extends JpaRepository<ScrapItem, Long > {
             LocalDate date
     );
 
+//    @Query("""
+//            SELECT item
+//            FROM ScrapItem item
+//            WHERE item.user.id = :userId
+//              AND item.date = :date
+//              AND item.scrapType.id = :scrapTypeId
+//              AND item.customer.customer_id = :customerId
+//            """)
+//    List<ScrapItem> findScrapItemsByFilters(
+//            @Param("userId") Long userId,
+//            @Param("date") LocalDate date,
+//            @Param("scrapTypeId") Long scrapTypeId,
+//            @Param("customerId") Long customerId
+//    );
+
     @Query("""
-            SELECT item
-            FROM ScrapItem item
-            WHERE item.user.id = :userId
-              AND item.date = :date
-              AND item.scrapType.id = :scrapTypeId
-              AND item.customer.customer_id = :customerId
-            """)
+    SELECT item
+    FROM ScrapItem item
+    JOIN FETCH item.scrapType
+    WHERE item.user.id = :userId
+      AND item.date = :date
+      AND (
+          :scrapTypeId IS NULL
+          OR :scrapTypeId = 0
+          OR item.scrapType.id = :scrapTypeId
+      )
+      AND (
+          :customerId IS NULL
+          OR :customerId = 0
+          OR item.customer.customer_id = :customerId
+      )
+    ORDER BY item.scrapType.scrapName
+    """)
     List<ScrapItem> findScrapItemsByFilters(
             @Param("userId") Long userId,
             @Param("date") LocalDate date,
             @Param("scrapTypeId") Long scrapTypeId,
             @Param("customerId") Long customerId
     );
+
 }

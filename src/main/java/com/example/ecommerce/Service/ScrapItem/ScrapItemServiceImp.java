@@ -9,7 +9,10 @@ import com.example.ecommerce.Repository.UserRepository;
 import com.example.ecommerce.Service.ScrapItem.ScrapItemService;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ScrapItemServiceImp implements ScrapItemService {
@@ -140,6 +143,26 @@ public class ScrapItemServiceImp implements ScrapItemService {
                 request.getUser_id(),
                 request.getDate()
         );
+    }
+
+    @Override
+    public Map<String, List<ScrapItem>> getScrapItemsGroupByName(
+            ScrapItemFilter request) {
+
+        List<ScrapItem> items =
+                scrapitemrepository.findScrapItemsByFilters(
+                        request.getUsers_id(),
+                        request.getDate(),
+                        request.getScraptype_id(),
+                        request.getCustomers_id()
+                );
+
+        return items.stream()
+                .collect(Collectors.groupingBy(
+                        item -> item.getScrapType().getScrapName(),
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
     }
 
 }

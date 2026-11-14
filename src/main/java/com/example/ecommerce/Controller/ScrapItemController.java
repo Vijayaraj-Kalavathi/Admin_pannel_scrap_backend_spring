@@ -18,6 +18,7 @@ import java.util.Map;
 public class ScrapItemController{
     private final ScrapItemService scrapitemservice;
 
+
     public ScrapItemController(ScrapItemService scrapitemservice){
         this.scrapitemservice = scrapitemservice;
     }
@@ -97,4 +98,24 @@ public class ScrapItemController{
 
         return ResponseEntity.ok(result);
     }
+
+
+    @PostMapping("/group-by-scrapname")
+    public ResponseEntity<?> getGroupByScrapName(
+            @RequestBody ScrapItemFilter request) {
+
+        // Mandatory field validation
+        if (request.getUsers_id() == null ||
+                request.getDate() == null) {
+
+            return ResponseEntity.badRequest()
+                    .body("users_id and date are mandatory");
+        }
+
+        Map<String, List<ScrapItem>> response =
+                scrapitemservice.getScrapItemsGroupByName(request);
+
+        return ResponseEntity.ok(response);
+    }
+
 }
