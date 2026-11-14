@@ -2,8 +2,10 @@ package com.example.ecommerce.Service.ScrapItem;
 
 import com.example.ecommerce.Model.ScrapItem;
 import com.example.ecommerce.Model.ScrapItemFilter;
+import com.example.ecommerce.Model.ScrapModel.ScrapItemAll;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ScrapItemService{
@@ -14,4 +16,5 @@ public interface ScrapItemService{
     ScrapItem updateScrapItemById(Long id, ScrapItem scrapitem);
     ScrapItem deleteScrapItemById(Long id);
     List<ScrapItem> getScrapTypeFilter(ScrapItemFilter request);
+    List<ScrapItem> getScrapItemsUserIdAndDate(ScrapItemAll request);
 }

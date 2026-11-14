@@ -1,6 +1,7 @@
 package com.example.ecommerce.Service.ScrapItem;
 
 import com.example.ecommerce.Model.*;
+import com.example.ecommerce.Model.ScrapModel.ScrapItemAll;
 import com.example.ecommerce.Repository.CustomerRepository;
 import com.example.ecommerce.Repository.ScrapItemRepository;
 import com.example.ecommerce.Repository.ScrapTypeRepository;
@@ -129,6 +130,16 @@ public class ScrapItemServiceImp implements ScrapItemService {
         scrapitemrepository.deleteById(id);
 
         return scrapType;
+    }
+
+    //getAll scrapItems by userId and date
+    @Override
+    public List<ScrapItem> getScrapItemsUserIdAndDate(ScrapItemAll request) {
+
+        return scrapitemrepository.findByUser_IdAndDate(
+                request.getUser_id(),
+                request.getDate()
+        );
     }
 
 }

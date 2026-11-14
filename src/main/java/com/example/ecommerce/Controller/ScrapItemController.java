@@ -2,6 +2,7 @@ package com.example.ecommerce.Controller;
 
 import com.example.ecommerce.Model.ScrapItem;
 import com.example.ecommerce.Model.ScrapItemFilter;
+import com.example.ecommerce.Model.ScrapModel.ScrapItemAll;
 import com.example.ecommerce.Model.ScrapType;
 import com.example.ecommerce.Service.ScrapItem.ScrapItemService;
 import org.springframework.http.HttpStatus;
@@ -83,6 +84,16 @@ public class ScrapItemController{
 
         List<ScrapItem> result =
                 scrapitemservice.getScrapTypeFilter(request);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/getAllScrapItem")
+    public ResponseEntity<List<ScrapItem>> getAllScrapItems(
+            @RequestBody ScrapItemAll request) {
+
+        List<ScrapItem> result =
+                scrapitemservice.getScrapItemsUserIdAndDate(request);
 
         return ResponseEntity.ok(result);
     }

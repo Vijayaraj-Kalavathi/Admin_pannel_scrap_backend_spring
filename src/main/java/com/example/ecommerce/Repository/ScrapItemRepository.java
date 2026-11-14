@@ -13,6 +13,11 @@ import java.util.List;
 public interface ScrapItemRepository extends JpaRepository<ScrapItem, Long > {
     List<ScrapItem> findByUser_Id(Long userId);
 
+    List<ScrapItem> findByUser_IdAndDate(
+            Long userId,
+            LocalDate date
+    );
+
     @Query("""
             SELECT item
             FROM ScrapItem item
