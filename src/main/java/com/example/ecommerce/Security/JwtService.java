@@ -13,11 +13,16 @@ import java.util.Date;
 @Service
 public class JwtService {
 
+    private static final String TOKEN_TYPE_CLAIM = "token_type";
+    private static final String ACCESS_TOKEN_TYPE = "access";
+    private static final String REFRESH_TOKEN_TYPE = "refresh";
     private static final String SECRET_KEY =
             "mySecretKeyForJwtAuthentication123456789";
 
-    private static final long EXPIRATION_TIME =
-            1000L * 60 * 60; // 1 hour
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME =
+            1000L * 60 * 3; // 15 minutes
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME =
+            1000L * 60 * 60 * 24 * 7;
 
     private static SecretKey getKey() {
         return Keys.hmacShaKeyFor(
@@ -25,38 +30,53 @@ public class JwtService {
         );
     }
 
-    // 1. Generate JWT token after successful login
-    public static String generateToken(String username) {
+    public String generateAccessToken(String username) {
+        return generateToken(
+                username,
+                ACCESS_TOKEN_TYPE,
+                ACCESS_TOKEN_EXPIRATION_TIME
+        );
+    }
+
+    public String generateRefreshToken(String username) {
+        return generateToken(username, REFRESH_TOKEN_TYPE, REFRESH_TOKEN_EXPIRATION_TIME);
+    }
+
+    private String generateToken(
+            String username,
+            String tokenType,
+            long expirationTime) {
         return Jwts.builder()
                 .subject(username)
+                .claim(TOKEN_TYPE_CLAIM, tokenType)
                 .issuedAt(new Date())
-                .expiration(
-                        new Date(System.currentTimeMillis()
-                                + EXPIRATION_TIME)
-                )
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getKey())
                 .compact();
     }
 
-    // 2. Extract username from JWT
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    // 3. Validate JWT and check the username
     public boolean isTokenValid(
             String token,
             UserDetails userDetails) {
 
-        final String username = extractUsername(token);
+        Claims claims = extractAllClaims(token);
 
-        return username.equals(userDetails.getUsername())
-                && extractAllClaims(token)
-                .getExpiration()
-                .after(new Date());
+        String tokenType = claims.get(TOKEN_TYPE_CLAIM, String.class);
+        return (tokenType == null || ACCESS_TOKEN_TYPE.equals(tokenType))
+                && userDetails.getUsername().equals(claims.getSubject())
+                && claims.getExpiration().after(new Date());
     }
 
-    // 4. Parse claims and verify the JWT signature
+    public boolean isRefreshToken(String token) {
+        Claims claims = extractAllClaims(token);
+        return REFRESH_TOKEN_TYPE.equals(claims.get(TOKEN_TYPE_CLAIM, String.class))
+                && claims.getExpiration().after(new Date());
+    }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getKey())

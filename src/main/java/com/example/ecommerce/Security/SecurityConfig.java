@@ -43,7 +43,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/auth/register", "/auth/login", "/auth/admin/register").permitAll()
+                        .requestMatchers(
+                                "/auth/register",
+                                "/auth/login",
+                                "/auth/refresh",
+                                "/auth/admin/register"
+                        ).permitAll()
 
                         // adjust to your rules
                         .requestMatchers(HttpMethod.GET, "/scrapitem/**").authenticated()

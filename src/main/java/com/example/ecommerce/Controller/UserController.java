@@ -1,6 +1,8 @@
 package com.example.ecommerce.Controller;
 
 import com.example.ecommerce.Model.User;
+import com.example.ecommerce.Model.AuthTokens;
+import com.example.ecommerce.Model.RefreshTokenRequest;
 import com.example.ecommerce.Service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +56,7 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> login(
             @RequestBody User user) {
 
-        String token = userService.login(
+        AuthTokens tokens = userService.login(
                 user.getUsername(),
                 user.getPassword()
         );
@@ -67,10 +69,25 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
 
         response.put("message", "Login successful");
-        response.put("token", token);
+        response.put("token", tokens.accessToken());
+        response.put("accessToken", tokens.accessToken());
+        response.put("refreshToken", tokens.refreshToken());
         response.put("username", existingUser.getUsername());
         response.put("user_id", existingUser.getId());
         response.put("storeName", existingUser.getStoreName());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<Map<String, Object>> refresh(
+            @RequestBody RefreshTokenRequest request) {
+
+        AuthTokens tokens = userService.refresh(request.refreshToken());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Token refreshed successfully");
+        response.put("token", tokens.accessToken());
+        response.put("accessToken", tokens.accessToken());
+        response.put("refreshToken", tokens.refreshToken());
         return ResponseEntity.ok(response);
     }
 

@@ -1,25 +1,29 @@
 package com.example.ecommerce.Service;
 
 import com.example.ecommerce.Model.User;
+import com.example.ecommerce.Model.AuthTokens;
 import com.example.ecommerce.Repository.UserRepository;
 import com.example.ecommerce.Security.JwtService;
+import io.jsonwebtoken.JwtException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtservice;
+    private final JwtService jwtService;
 
     public UserServiceImp(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder, JwtService jwtservice) {
+            PasswordEncoder passwordEncoder, JwtService jwtService) {
 
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtservice = jwtservice;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -69,7 +73,7 @@ public class UserServiceImp implements UserService {
 
 
     @Override
-    public String login(String username, String password) {
+    public AuthTokens login(String username, String password) {
 
         // 1. Find user
         User user = userRepository
@@ -93,9 +97,40 @@ public class UserServiceImp implements UserService {
             );
         }
 
-        // 3. Generate JWT
-        return JwtService.generateToken(
-                user.getUsername()
+        return new AuthTokens(
+                jwtService.generateAccessToken(user.getUsername()),
+                jwtService.generateRefreshToken(user.getUsername())
+        );
+    }
+
+    @Override
+    public AuthTokens refresh(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw invalidRefreshToken();
+        }
+
+        try {
+            if (!jwtService.isRefreshToken(refreshToken)) {
+                throw invalidRefreshToken();
+            }
+
+            String username = jwtService.extractUsername(refreshToken);
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(UserServiceImp::invalidRefreshToken);
+
+            return new AuthTokens(
+                    jwtService.generateAccessToken(user.getUsername()),
+                    refreshToken
+            );
+        } catch (JwtException | IllegalArgumentException exception) {
+            throw invalidRefreshToken();
+        }
+    }
+
+    private static ResponseStatusException invalidRefreshToken() {
+        return new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "Invalid or expired refresh token"
         );
     }
 
