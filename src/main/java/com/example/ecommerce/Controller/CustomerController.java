@@ -1,6 +1,7 @@
 package com.example.ecommerce.Controller;
 
 import com.example.ecommerce.Model.Customer;
+import com.example.ecommerce.Model.ScrapItem;
 import com.example.ecommerce.Service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,21 @@ public class CustomerController {
         response.put("data",updateCustomer);
         return ResponseEntity.ok(response);
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteCustomerById(
+            @PathVariable Long id) {
+
+        Customer deletedCustomer =
+                customerservice.deleteCustomerById(id);
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("Message", "Customer deleted successfully");
+        response.put("data", deletedCustomer);
+
+        return ResponseEntity.ok(response);
     }
 
 

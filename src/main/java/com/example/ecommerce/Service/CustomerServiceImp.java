@@ -1,6 +1,7 @@
 package com.example.ecommerce.Service;
 
 import com.example.ecommerce.Model.Customer;
+import com.example.ecommerce.Model.ScrapItem;
 import com.example.ecommerce.Repository.CustomerRepository;
 import com.example.ecommerce.Service.CustomerService;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,15 @@ public class CustomerServiceImp implements CustomerService {
       existCustomer.setGst_No(customer.getGst_No());
       return  customerrepository.save(existCustomer);
   }
+
+    @Override
+    public Customer deleteCustomerById(Long id){
+        Customer customer = customerrepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        customerrepository.deleteById(id);
+
+        return customer;
+    }
 
 }

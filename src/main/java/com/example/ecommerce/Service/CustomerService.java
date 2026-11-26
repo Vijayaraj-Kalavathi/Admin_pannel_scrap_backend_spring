@@ -1,6 +1,7 @@
 package com.example.ecommerce.Service;
 
 import com.example.ecommerce.Model.Customer;
+import com.example.ecommerce.Model.ScrapItem;
 
 import java.util.List;
 
@@ -9,4 +10,5 @@ Customer createCustomers(Customer customer);
 List<Customer> getAllCustomers();
 Customer getCustomerById(Long id);
 Customer updateCustomerById(Long id, Customer customer);
+Customer deleteCustomerById(Long id);
 }

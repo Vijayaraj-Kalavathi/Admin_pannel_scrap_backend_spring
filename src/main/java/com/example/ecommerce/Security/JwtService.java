@@ -20,7 +20,7 @@ public class JwtService {
             "mySecretKeyForJwtAuthentication123456789";
 
     private static final long ACCESS_TOKEN_EXPIRATION_TIME =
-            1000L * 60 * 3; // 15 minutes
+            1000L * 60 * 15; // 15 minutes
     private static final long REFRESH_TOKEN_EXPIRATION_TIME =
             1000L * 60 * 60 * 24 * 7;
 
