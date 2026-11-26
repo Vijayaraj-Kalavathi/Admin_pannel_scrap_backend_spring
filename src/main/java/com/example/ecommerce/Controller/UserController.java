@@ -75,6 +75,7 @@ public class UserController {
         response.put("username", existingUser.getUsername());
         response.put("user_id", existingUser.getId());
         response.put("storeName", existingUser.getStoreName());
+        response.put("role", existingUser.getRole());
         return ResponseEntity.ok(response);
     }
 
