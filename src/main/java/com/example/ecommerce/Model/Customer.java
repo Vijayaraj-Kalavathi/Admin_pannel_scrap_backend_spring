@@ -13,6 +13,9 @@ public class Customer{
     private String address;
     private String gst_no;
 
+    @Column(nullable = false)
+    private String status = "ACTIVE";
+
     public Customer(){}
 
     public Customer(Long customer_id, String customer_name, String address, String gst_no){
@@ -20,6 +23,7 @@ public class Customer{
         this.customer_name = customer_name;
         this.address = address;
         this.gst_no = gst_no;
+        this.status = "ACTIVE";
     }
 
     public Long getCustomer_ID() {
@@ -52,5 +56,13 @@ public class Customer{
 
     public void setGst_No(String gst_no) {
         this.gst_no = gst_no;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
