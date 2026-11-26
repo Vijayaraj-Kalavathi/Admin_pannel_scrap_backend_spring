@@ -11,6 +11,9 @@ public class ScrapType {
     private String scrapName;
     private String description;
 
+    @Column(nullable = false)
+    private String status = "ACTIVE";
+
     public ScrapType(){
 
     }
@@ -19,6 +22,7 @@ public class ScrapType {
         this.id = id;
         this.scrapName = scrapName;
         this.description = description;
+        this.status = "ACTIVE";
     }
 
     public Long getId() {
@@ -43,5 +47,13 @@ public class ScrapType {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

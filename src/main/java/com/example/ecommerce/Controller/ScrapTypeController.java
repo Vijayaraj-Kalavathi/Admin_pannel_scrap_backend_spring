@@ -52,6 +52,7 @@ public class ScrapTypeController{
 
     }
 
+    // SOFT DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteScrapTypeById(
             @PathVariable Long id) {
@@ -61,7 +62,7 @@ public class ScrapTypeController{
 
         Map<String, Object> response = new HashMap<>();
 
-        response.put("Message", "ScrapType deleted successfully");
+        response.put("Message", "ScrapType deactivated successfully");
         response.put("data", deletedScrapType);
 
         return ResponseEntity.ok(response);
