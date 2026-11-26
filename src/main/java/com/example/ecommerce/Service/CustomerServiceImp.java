@@ -38,7 +38,7 @@ public class CustomerServiceImp implements CustomerService {
 
         return customerrepository.findByCustomerIdAndStatus(id, "ACTIVE")
                 .orElseThrow(() ->
-                        new RuntimeException("Active ScrapType not found"));
+                        new RuntimeException("Active Customer not found"));
     }
 
   @Override
@@ -47,7 +47,7 @@ public class CustomerServiceImp implements CustomerService {
       Customer existscrapType = customerrepository
               .findByCustomerIdAndStatus(id, "ACTIVE")
               .orElseThrow(() ->
-                      new RuntimeException("Active ScrapType not found"));
+                      new RuntimeException("Active Customer not found"));
 
       existscrapType.setCustomer_Name(customer.getCustomer_Name());
       existscrapType.setAddress(customer.getAddress());
@@ -63,7 +63,7 @@ public class CustomerServiceImp implements CustomerService {
         Customer customer = customerrepository
                 .findByCustomerIdAndStatus(id, "ACTIVE")
                 .orElseThrow(() ->
-                        new RuntimeException("Active ScrapType not found"));
+                        new RuntimeException("Active Customer not found"));
 
         customer.setStatus("INACTIVE");
 

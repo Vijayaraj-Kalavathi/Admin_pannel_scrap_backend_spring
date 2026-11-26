@@ -46,7 +46,7 @@ public class ScrapTypeController{
         ScrapType updateScrapType= scraptypeservice.updateScrapTypeById(id, scraptype);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Customer Updated Successfully");
+        response.put("message", "ScrapType Updated Successfully");
         response.put("data",updateScrapType);
         return ResponseEntity.ok(response);
 
