@@ -140,30 +140,32 @@ public class UserServiceImp implements UserService {
     public void resetPassword(String identifier, String newPassword) {
 
         if (identifier == null || identifier.isBlank()) {
-            throw new RuntimeException("Username or Store Name is required");
+            throw new IllegalArgumentException(
+                    "Username or Store Name is required"
+            );
         }
 
-        if (newPassword == null || newPassword.length() < 8) {
-            throw new RuntimeException(
-                    "Password must contain at least 8 characters"
+        if (newPassword == null || newPassword.length() < 5) {
+            throw new IllegalArgumentException(
+                    "Password must contain at least 5 characters"
             );
         }
 
         User user = userRepository.findByUsername(identifier)
                 .orElse(null);
 
-        // If username is not found, search by store name
+        // Search by Store Name if username is not found
         if (user == null) {
 
             List<User> users =
                     userRepository.findAllByStoreName(identifier);
 
             if (users.isEmpty()) {
-                throw new RuntimeException("User not found");
+                throw new IllegalArgumentException("User not found");
             }
 
             if (users.size() > 1) {
-                throw new RuntimeException(
+                throw new IllegalArgumentException(
                         "Multiple users found with this Store Name. Please use Username."
                 );
             }
