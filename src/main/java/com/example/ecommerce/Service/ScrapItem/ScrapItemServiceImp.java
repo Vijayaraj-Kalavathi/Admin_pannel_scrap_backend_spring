@@ -34,15 +34,13 @@ public class ScrapItemServiceImp implements ScrapItemService {
     }
 
     @Override
-    public List<ScrapItem> getAllScrapItem(){
-        return scrapitemrepository.findAll();
+    public List<ScrapItem> getAllScrapItem() {
+        return scrapitemrepository.findAllByOrderByIdDesc();
     }
 
     @Override
     public List<ScrapItem> getScrapItemsByUserId(Long userId) {
-
-        return scrapitemrepository.findByUser_Id(userId);
-
+        return scrapitemrepository.findByUser_IdOrderByIdDesc(userId);
     }
 
     @Override
@@ -135,11 +133,9 @@ public class ScrapItemServiceImp implements ScrapItemService {
         return scrapType;
     }
 
-    //getAll scrapItems by userId and date
     @Override
     public List<ScrapItem> getScrapItemsUserIdAndDate(ScrapItemAll request) {
-
-        return scrapitemrepository.findByUser_IdAndDate(
+        return scrapitemrepository.findByUser_IdAndDateOrderByIdDesc(
                 request.getUser_id(),
                 request.getDate()
         );
