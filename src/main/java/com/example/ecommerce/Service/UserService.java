@@ -10,4 +10,6 @@ public interface UserService {
     AuthTokens login(String username, String password);
     AuthTokens refresh(String refreshToken);
     User getUserByUsername(String username);
+
+    void resetPassword(String identifier, String newPassword);
 }

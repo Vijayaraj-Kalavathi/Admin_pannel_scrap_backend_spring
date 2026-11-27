@@ -47,7 +47,8 @@ public class SecurityConfig {
                                 "/auth/register",
                                 "/auth/login",
                                 "/auth/refresh",
-                                "/auth/admin/register"
+                                "/auth/admin/register",
+                                "/auth/reset-password"
                         ).permitAll()
 
                         // adjust to your rules

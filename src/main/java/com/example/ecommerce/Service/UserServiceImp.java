@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class UserServiceImp implements UserService {
 
@@ -132,6 +134,48 @@ public class UserServiceImp implements UserService {
                 HttpStatus.UNAUTHORIZED,
                 "Invalid or expired refresh token"
         );
+    }
+
+    @Override
+    public void resetPassword(String identifier, String newPassword) {
+
+        if (identifier == null || identifier.isBlank()) {
+            throw new RuntimeException("Username or Store Name is required");
+        }
+
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new RuntimeException(
+                    "Password must contain at least 8 characters"
+            );
+        }
+
+        User user = userRepository.findByUsername(identifier)
+                .orElse(null);
+
+        // If username is not found, search by store name
+        if (user == null) {
+
+            List<User> users =
+                    userRepository.findAllByStoreName(identifier);
+
+            if (users.isEmpty()) {
+                throw new RuntimeException("User not found");
+            }
+
+            if (users.size() > 1) {
+                throw new RuntimeException(
+                        "Multiple users found with this Store Name. Please use Username."
+                );
+            }
+
+            user = users.get(0);
+        }
+
+        // Encrypt password
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        // Save updated password
+        userRepository.save(user);
     }
 
 }

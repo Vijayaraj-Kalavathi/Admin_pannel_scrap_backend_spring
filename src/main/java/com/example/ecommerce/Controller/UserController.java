@@ -1,5 +1,6 @@
 package com.example.ecommerce.Controller;
 
+import com.example.ecommerce.Model.ResetPasswordRequest;
 import com.example.ecommerce.Model.User;
 import com.example.ecommerce.Model.AuthTokens;
 import com.example.ecommerce.Model.RefreshTokenRequest;
@@ -89,6 +90,21 @@ public class UserController {
         response.put("token", tokens.accessToken());
         response.put("accessToken", tokens.accessToken());
         response.put("refreshToken", tokens.refreshToken());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, Object>> resetPassword(
+            @RequestBody ResetPasswordRequest request) {
+
+        userService.resetPassword(
+                request.getIdentifier(),
+                request.getNewPassword()
+        );
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Password reset successfully");
+
         return ResponseEntity.ok(response);
     }
 
