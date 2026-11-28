@@ -1,5 +1,7 @@
 package com.example.ecommerce.Controller;
 
+import com.example.ecommerce.Model.Dashboard.ScrapDashboardResponse;
+import com.example.ecommerce.Model.ScrapDashboardFilterRequest;
 import com.example.ecommerce.Model.ScrapItem;
 import com.example.ecommerce.Model.ScrapItemFilter;
 import com.example.ecommerce.Model.ScrapModel.ScrapItemAll;
@@ -114,6 +116,16 @@ public class ScrapItemController{
 
         Map<String, List<ScrapItem>> response =
                 scrapitemservice.getScrapItemsGroupByName(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/dashboard/filter")
+    public ResponseEntity<ScrapDashboardResponse> getDashboard(
+            @RequestBody ScrapDashboardFilterRequest request) {
+
+        ScrapDashboardResponse response =
+                scrapitemservice.getDashboard(request);
 
         return ResponseEntity.ok(response);
     }

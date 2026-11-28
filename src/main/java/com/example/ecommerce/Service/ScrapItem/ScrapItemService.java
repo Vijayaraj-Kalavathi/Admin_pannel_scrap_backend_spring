@@ -1,5 +1,7 @@
 package com.example.ecommerce.Service.ScrapItem;
 
+import com.example.ecommerce.Model.Dashboard.ScrapDashboardResponse;
+import com.example.ecommerce.Model.ScrapDashboardFilterRequest;
 import com.example.ecommerce.Model.ScrapItem;
 import com.example.ecommerce.Model.ScrapItemFilter;
 import com.example.ecommerce.Model.ScrapModel.ScrapItemAll;
@@ -23,5 +25,8 @@ public interface ScrapItemService{
 
     Map<String, List<ScrapItem>> getScrapItemsGroupByName(
             ScrapItemFilter request
+    );
+    ScrapDashboardResponse getDashboard(
+            ScrapDashboardFilterRequest request
     );
 }

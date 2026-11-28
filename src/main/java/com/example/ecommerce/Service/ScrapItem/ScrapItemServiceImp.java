@@ -1,6 +1,10 @@
 package com.example.ecommerce.Service.ScrapItem;
 
 import com.example.ecommerce.Model.*;
+import com.example.ecommerce.Model.Dashboard.CustomerDispatch;
+import com.example.ecommerce.Model.Dashboard.MonthlyDispatch;
+import com.example.ecommerce.Model.Dashboard.ScrapDashboardResponse;
+import com.example.ecommerce.Model.Dashboard.ScrapTypeSummary;
 import com.example.ecommerce.Model.ScrapModel.ScrapItemAll;
 import com.example.ecommerce.Repository.CustomerRepository;
 import com.example.ecommerce.Repository.ScrapItemRepository;
@@ -9,6 +13,7 @@ import com.example.ecommerce.Repository.UserRepository;
 import com.example.ecommerce.Service.ScrapItem.ScrapItemService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -161,4 +166,67 @@ public class ScrapItemServiceImp implements ScrapItemService {
                 ));
     }
 
+    @Override
+    public ScrapDashboardResponse getDashboard(
+            ScrapDashboardFilterRequest request) {
+
+        // Validation
+        if (request.getUser_id() == null) {
+            throw new IllegalArgumentException("User ID is required");
+        }
+
+        if (request.getFromDate() == null || request.getToDate() == null) {
+            throw new IllegalArgumentException(
+                    "From date and To date are required"
+            );
+        }
+
+        if (request.getFromDate().isAfter(request.getToDate())) {
+            throw new IllegalArgumentException(
+                    "From date cannot be after To date"
+            );
+        }
+
+        // Get filter values
+        Long userId = request.getUser_id();
+        LocalDate fromDate = request.getFromDate();
+        LocalDate toDate = request.getToDate();
+        Long customerId = request.getCustomer_id();
+
+        // Total quantity
+        Double totalQuantity = scrapitemrepository.getTotalQuantity(
+                userId, fromDate, toDate, customerId
+        );
+
+        // Scrap type summary
+        List<ScrapTypeSummary> scrapCategories =
+                scrapitemrepository.getScrapTypeSummary(
+                        userId, fromDate, toDate, customerId
+                );
+
+        // Active exporters
+        Long activeExporters = scrapitemrepository.getActiveExporterCount(
+                userId, fromDate, toDate, customerId
+        );
+
+        // Customer-wise dispatch
+        List<CustomerDispatch> customerDispatch =
+                scrapitemrepository.getCustomerDispatch(
+                        userId, fromDate, toDate, customerId
+                );
+
+        // Monthly dispatch
+        List<MonthlyDispatch> monthlyDispatch =
+                scrapitemrepository.getMonthlyDispatch(
+                        userId, fromDate, toDate, customerId
+                );
+
+        return new ScrapDashboardResponse(
+                totalQuantity,
+                scrapCategories,
+                activeExporters,
+                customerDispatch,
+                monthlyDispatch
+        );
+    }
 }
