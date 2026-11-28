@@ -20,13 +20,17 @@ public class ScrapTypeController{
         this.scraptypeservice = scraptypeservice;
     }
 
-    @PostMapping()
-    public ResponseEntity<Map<String, Object>> createScrapType(@RequestBody ScrapType scraptype) {
-        ScrapType createScrapType = scraptypeservice.createScrapType(scraptype);
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> createScrapType(
+            @RequestBody ScrapType scraptype) {
+
+        ScrapType createdScrapType =
+                scraptypeservice.createScrapType(scraptype);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("Message", "Customer Created Successfully");
-        response.put("data", createScrapType);
+
+        response.put("message", "Scrap Type Created Successfully");
+        response.put("data", createdScrapType);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

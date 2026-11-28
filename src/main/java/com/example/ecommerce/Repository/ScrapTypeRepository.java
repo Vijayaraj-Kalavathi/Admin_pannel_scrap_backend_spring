@@ -12,5 +12,9 @@ public interface ScrapTypeRepository extends JpaRepository<ScrapType, Long >{
 
     List<ScrapType> findByStatus(String status);
 
+    List<ScrapType> findByStatusOrderByIdDesc(String status);
+
     Optional<ScrapType> findByIdAndStatus(Long id, String status);
+
+    boolean existsByScrapNameIgnoreCase(String scrapName);
 }

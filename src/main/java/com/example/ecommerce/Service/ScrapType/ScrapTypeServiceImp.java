@@ -17,19 +17,38 @@ public class ScrapTypeServiceImp implements ScrapTypeService{
     }
 
     // CREATE
+    // CREATE
     @Override
     public ScrapType createScrapType(ScrapType scraptype) {
 
+        // Validate empty name
+        if (scraptype.getScrapName() == null ||
+                scraptype.getScrapName().isBlank()) {
+
+            throw new IllegalArgumentException("Scrap Name is required");
+        }
+
+        // Check duplicate
+        boolean exists = scraptyperepository
+                .existsByScrapNameIgnoreCase(
+                        scraptype.getScrapName().trim()
+                );
+
+        if (exists) {
+            throw new IllegalArgumentException("Scrap Type Already Present");
+        }
+
+        scraptype.setScrapName(scraptype.getScrapName().trim());
         scraptype.setStatus("ACTIVE");
 
         return scraptyperepository.save(scraptype);
     }
 
-    // GET ALL ACTIVE SCRAP TYPES
+    // GET ALL ACTIVE SCRAP TYPES - LATEST FIRST
     @Override
     public List<ScrapType> getAllScrapType() {
 
-        return scraptyperepository.findByStatus("ACTIVE");
+        return scraptyperepository.findByStatusOrderByIdDesc("ACTIVE");
     }
 
     // GET BY ID (ACTIVE ONLY)
