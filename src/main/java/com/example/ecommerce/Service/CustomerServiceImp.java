@@ -2,7 +2,6 @@ package com.example.ecommerce.Service;
 
 import com.example.ecommerce.Model.Customer;
 import com.example.ecommerce.Repository.CustomerRepository;
-import com.example.ecommerce.Service.CustomerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,19 +19,37 @@ public class CustomerServiceImp implements CustomerService {
     @Override
     public Customer createCustomers(Customer customer) {
 
+        // Validate customer name
+        if (customer.getCustomer_Name() == null ||
+                customer.getCustomer_Name().isBlank()) {
+
+            throw new IllegalArgumentException("Customer Name is required");
+        }
+
+        String customerName = customer.getCustomer_Name().trim();
+
+        // Check duplicate
+        boolean exists = customerrepository
+                .existsCustomerName(customerName);
+
+        if (exists) {
+            throw new IllegalArgumentException("Customer Already Present");
+        }
+
+        customer.setCustomer_Name(customerName);
         customer.setStatus("ACTIVE");
 
         return customerrepository.save(customer);
     }
 
-    // GET ALL ACTIVE SCRAP TYPES
+    // GET ALL ACTIVE CUSTOMERS - LATEST FIRST
     @Override
     public List<Customer> getAllCustomers() {
 
-        return customerrepository.findByStatus("ACTIVE");
+        return customerrepository.findActiveCustomersLatestFirst("ACTIVE");
     }
 
-    // GET BY ID (ACTIVE ONLY)
+    // GET BY ID
     @Override
     public Customer getCustomerById(Long id) {
 
@@ -44,15 +61,15 @@ public class CustomerServiceImp implements CustomerService {
   @Override
   public Customer updateCustomerById(Long id, Customer customer){
 
-      Customer existscrapType = customerrepository
+      Customer existCustomer = customerrepository
               .findByCustomerIdAndStatus(id, "ACTIVE")
               .orElseThrow(() ->
                       new RuntimeException("Active Customer not found"));
 
-      existscrapType.setCustomer_Name(customer.getCustomer_Name());
-      existscrapType.setAddress(customer.getAddress());
-      existscrapType.setGst_No(customer.getGst_No());
-      return  customerrepository.save(existscrapType);
+      existCustomer.setCustomer_Name(customer.getCustomer_Name());
+      existCustomer.setAddress(customer.getAddress());
+      existCustomer.setGst_No(customer.getGst_No());
+      return  customerrepository.save(existCustomer);
   }
 
 
